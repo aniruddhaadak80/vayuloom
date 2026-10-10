@@ -1,5 +1,30 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "regions": ["bom1", "iad1"]
+  "services": {
+    "vayuloom-web": {
+      "root": ".",
+      "framework": "nextjs"
+    },
+    "vayuloom-agents": {
+      "root": "services/agents",
+      "entrypoint": "app:app",
+      "buildCommand": "pip install -r requirements.txt"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/vayuloom-agents(/.*)?",
+      "destination": {
+        "type": "service",
+        "service": "vayuloom-agents"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "type": "service",
+        "service": "vayuloom-web"
+      }
+    }
+  ]
 }
