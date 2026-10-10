@@ -1,0 +1,31 @@
+%% VayuLoom infrastructure on AWS
+flowchart TB
+    subgraph cdn[Edge]
+        cloudfront[CloudFront]
+        vercel[Vercel web - bom1]
+    end
+    subgraph apigw[API]
+        gw[API Gateway]
+        lambda[Lambda autopilotPlan]
+    end
+    subgraph store[State]
+        dynamo[(DynamoDB zones)]
+        s3[(S3 snapshots)]
+        opensearch[(OpenSearch AQI)]
+    end
+    subgraph msg[Messaging]
+        sns[SNS parent alerts]
+    end
+    subgraph local[Local parity]
+        localstack[LocalStack]
+        finch[Finch containers]
+    end
+    vercel --> cloudfront
+    cloudfront --> gw
+    gw --> lambda
+    lambda --> dynamo
+    lambda --> s3
+    lambda --> opensearch
+    lambda --> sns
+    localstack --> dynamo
+    finch --> localstack

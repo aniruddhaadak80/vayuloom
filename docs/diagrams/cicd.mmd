@@ -1,0 +1,16 @@
+%% VayuLoom CI/CD pipeline
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#22D3EE', 'primaryTextColor': '#0B1026', 'primaryBorderColor': '#F59E0B', 'lineColor': '#22D3EE', 'background': '#0B1026', 'mainBkg': '#0B1026', 'textColor': '#E2E8F0'}}}%%
+flowchart TD
+    push[git push] --> ci[GitHub Actions ci.yml]
+    ci --> install[bun install]
+    install --> tsc[tsc --noEmit]
+    tsc --> lint[eslint]
+    lint --> vitest[vitest run]
+    vitest --> pytest[pytest services/agents]
+    pytest --> build[next build standalone]
+    build --> sam[SAM build + LocalStack test]
+    sam --> vercel[Vercel deploy web]
+    sam --> lambda_deploy[Lambda autopilotPlan deploy]
+    vercel --> health[HEALTHCHECK /api/health]
+    lambda_deploy --> health
+    health --> cf[CloudFront invalidated]

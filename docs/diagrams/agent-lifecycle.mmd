@@ -1,0 +1,14 @@
+%% VayuLoom autopilot agent lifecycle
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Sensing : poll /api/aqi
+    Sensing --> Evaluating : aqi sample ready
+    Evaluating --> Planning : band change detected
+    Evaluating --> Idle : no change
+    Planning --> Approving : autopilotPlan built
+    Approving --> Dispatching : GRAP policy allows
+    Approving --> Idle : below threshold
+    Dispatching --> Notifying : actions stored in DynamoDB
+    Notifying --> Idle : SNS receipts logged
+    Dispatching --> Escalated : Stage IV Severe Plus
+    Escalated --> Idle : DOE compliance filed

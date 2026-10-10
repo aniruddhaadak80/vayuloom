@@ -1,0 +1,19 @@
+%% VayuLoom request flow — dashboard to autopilot advisory
+sequenceDiagram
+    autonumber
+    participant UI as VayuLoom web
+    participant AQI as GET /api/aqi
+    participant AUTO as POST /api/autopilot
+    participant ENG as autopilotPlan engine
+    participant DB as DynamoDB zones
+    participant SNS as SNS topics
+    UI->>AQI: fetch 12 zones (seed 7331)
+    AQI-->>UI: zones + AQI + category
+    UI->>AUTO: {aqi, zoneName, students}
+    AUTO->>ENG: grapStage(aqi)
+    ENG->>DB: read zone thresholds
+    DB-->>ENG: GRAP band
+    ENG-->>AUTO: {stage, actions}
+    AUTO-->>UI: {stage, actions, sms_en, sms_hi}
+    AUTO->>SNS: publish advisory (Stage III+)
+    SNS-->>UI: delivery receipt

@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.14"
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck
+        run: bunx tsc --noEmit
+
+      - name: Lint
+        run: bunx eslint .
+
+      - name: Test (vitest)
+        run: bunx vitest run
+
+      - name: Test (pytest agents)
+        run: |
+          pip install -r services/agents/requirements.txt
+          pytest services/agents/test_app.py -v
+
+      - name: Build
+        run: bun run build

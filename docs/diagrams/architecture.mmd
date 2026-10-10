@@ -1,0 +1,37 @@
+%% VayuLoom system architecture — Air Safety OS for Indian schools
+%% theme: dark navy #0B1026, cyan #22D3EE, amber #F59E0B
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#22D3EE', 'primaryTextColor': '#0B1026', 'primaryBorderColor': '#F59E0B', 'lineColor': '#22D3EE', 'secondaryColor': '#0B1026', 'tertiaryColor': '#F59E0B', 'background': '#0B1026', 'mainBkg': '#0B1026', 'textColor': '#E2E8F0'}}}%%
+flowchart LR
+    subgraph client[School clients]
+        web[VayuLoom web<br/>Next.js 16]
+        sms[Parent SMS<br/>EN + HI]
+    end
+    subgraph edge[Edge + API]
+        cf[CloudFront CDN]
+        api[API Gateway<br/>/api/aqi /api/autopilot /api/health]
+    end
+    subgraph compute[Compute]
+        lambda[Lambda autopilotPlan]
+        agents[Agents service<br/>FastAPI :8001]
+        strands[Strands SDK agent]
+    end
+    subgraph data[Data]
+        s3[S3 snapshots]
+        dynamo[DynamoDB zones]
+        search[OpenSearch AQI index]
+        cedar[Cedar policies]
+    end
+    subgraph notify[Notify]
+        sns[SNS topics]
+    end
+    web --> cf --> api
+    api --> lambda
+    api --> agents
+    lambda --> strands
+    lambda --> dynamo
+    agents --> dynamo
+    dynamo --> s3
+    dynamo --> search
+    strands --> cedar
+    lambda --> sns --> sms
+    agents --> sns

@@ -1,0 +1,43 @@
+%% VayuLoom class model
+classDiagram
+    class Zone {
+        +string name
+        +float lat
+        +float lon
+        +currentAqi() int
+    }
+    class AqiReading {
+        +string zone
+        +int aqi
+        +string category
+        +int seed
+    }
+    class AutopilotPlan {
+        +GrapStage stage
+        +string[] actions
+        +string smsEn
+        +string smsHi
+        +plan(aqi, zone, students) AutopilotPlan
+    }
+    class GrapStage {
+        <<enumeration>>
+        None
+        StageI
+        StageII
+        StageIII
+        StageIV
+    }
+    class AdvisoryDispatcher {
+        +dispatch(plan) Receipt
+        +publishSns(topic, msg) void
+    }
+    class School {
+        +string id
+        +string name
+        +int students
+    }
+    Zone "1" --> "*" AqiReading : records
+    AqiReading --> GrapStage : maps to
+    GrapStage --> AutopilotPlan : drives
+    AutopilotPlan --> AdvisoryDispatcher : handed to
+    AdvisoryDispatcher --> School : notifies

@@ -1,0 +1,43 @@
+%% VayuLoom domain model
+erDiagram
+    ZONE ||--o{ AQI_READING : has
+    ZONE ||--o{ SCHOOL : contains
+    AQI_READING ||--o| GRAP_STAGE : triggers
+    GRAP_STAGE ||--o{ ADVISORY : produces
+    ADVISORY ||--o{ SMS : renders
+    SCHOOL ||--o{ ADVISORY : receives
+    ZONE {
+        string name PK
+        float lat
+        float lon
+    }
+    AQI_READING {
+        string zone FK
+        int aqi
+        string category
+        int seed
+        datetime taken_at
+    }
+    GRAP_STAGE {
+        string stage PK
+        int min_aqi
+        int max_aqi
+    }
+    ADVISORY {
+        string id PK
+        string stage FK
+        string zone FK
+        int students
+    }
+    SMS {
+        string id PK
+        string advisory FK
+        string lang
+        string body
+    }
+    SCHOOL {
+        string id PK
+        string name
+        string zone FK
+        int students
+    }

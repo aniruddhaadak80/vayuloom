@@ -1,0 +1,10 @@
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img"><title>VayuLoom open graph</title><rect x="0" y="0" width="1200" height="630" fill="#0B1026"/><circle cx="920" cy="200" r="240" fill="#22D3EE" opacity="0.12"/><circle cx="240" cy="520" r="200" fill="#F59E0B" opacity="0.10"/><g fill="none" stroke="#22D3EE" stroke-width="12" stroke-linecap="round"><path d="M80 248 H296 a28 28 0 1 0 -28 -28"/><path d="M80 288 H352 a28 28 0 1 1 -28 28"/><path d="M80 328 H264"/></g><circle cx="416" cy="352" r="24" fill="#F59E0B"/><text x="80" y="456" font-family="sans-serif" font-size="96" font-weight="700" fill="#FFFFFF" letter-spacing="-3">VayuLoom</text><text x="80" y="512" font-family="monospace" font-size="28" fill="#22D3EE" letter-spacing="6">THE AIR SAFETY OS FOR INDIAN SCHOOLS</text><text x="80" y="560" font-family="sans-serif" font-size="28" fill="#94A3B8">Stubble-to-classroom tracer · GRAP autopilot · offline seeds</text></svg>`;
+
+export function GET() {
+  return new Response(svg, {
+    headers: {
+      "Content-Type": "image/svg+xml",
+      "Cache-Control": "public, max-age=3600",
+    },
+  });
+}

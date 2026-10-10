@@ -1,0 +1,22 @@
+%% VayuLoom branching strategy
+gitGraph
+    commit id: "init next16"
+    branch agent-a-ui
+    checkout agent-a-ui
+    commit id: "observatory + exposure"
+    checkout main
+    branch agent-b-engine
+    checkout agent-b-engine
+    commit id: "GRAP engine lib"
+    checkout main
+    branch agent-c-platform
+    checkout agent-c-platform
+    commit id: "api + agents service"
+    commit id: "diagrams + adr"
+    checkout main
+    merge agent-c-platform
+    checkout main
+    merge agent-b-engine
+    checkout main
+    merge agent-a-ui
+    commit id: "ship hackathon slice"
