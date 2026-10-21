@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import { Activity, Radio, Wind } from "lucide-react";
 import { Badge, Card, CardText, CardTitle, Stat } from "@/components/ui";
+import { grapStageForAQI } from "@/lib/grap";
 
 const ObservatoryChart = dynamic(
   () =>
@@ -55,11 +56,19 @@ function fallbackHistory(zone: Zone): HistoryPoint[] {
 }
 
 function grapStage(aqi: number): { label: string; tone: "cyan" | "amber" | "red" | "green" } {
-  if (aqi <= 100) return { label: "Good–Satisfactory", tone: "green" };
-  if (aqi <= 200) return { label: "Moderate", tone: "cyan" };
-  if (aqi <= 300) return { label: "GRAP I · Poor", tone: "amber" };
-  if (aqi <= 400) return { label: "GRAP II · Very poor", tone: "amber" };
-  return { label: "GRAP III–IV · Severe", tone: "red" };
+  const stage = grapStageForAQI(aqi);
+  switch (stage) {
+    case "None":
+      return { label: "Good-Satisfactory", tone: "green" };
+    case "I":
+      return { label: "GRAP I", tone: "cyan" };
+    case "II":
+      return { label: "GRAP II", tone: "amber" };
+    case "III":
+      return { label: "GRAP III", tone: "amber" };
+    default:
+      return { label: "GRAP IV", tone: "red" };
+  }
 }
 
 type AqiModule = {
