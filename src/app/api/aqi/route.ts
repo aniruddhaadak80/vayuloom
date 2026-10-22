@@ -1,6 +1,9 @@
 export const dynamic = "force-dynamic";
 
-export const SEED = 7331;
+import { categoryForAQI } from "@/lib/aqi";
+import { SEED } from "@/lib/seed";
+
+export { SEED };
 
 export const ZONE_NAMES: readonly string[] = [
   "Anand Vihar",
@@ -32,12 +35,15 @@ export function deterministicAqi(name: string, index: number): number {
   return 90 + ((SEED + h * 7 + index * 53) % 330);
 }
 
+/**
+ * AQI → category, on the same scale the app uses.
+ *
+ * This used to be a second copy of the classification with different band
+ * edges and no "Moderate" band, so the API reported "Good" for an AQI of
+ * 75 and "Severe" for an AQI of 312.
+ */
 export function aqiCategory(aqi: number): string {
-  if (aqi > 400) return "Severe Plus";
-  if (aqi > 300) return "Severe";
-  if (aqi > 200) return "Very Poor";
-  if (aqi > 100) return "Poor";
-  return "Good";
+  return categoryForAQI(aqi);
 }
 
 export async function GET(): Promise<Response> {
